@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Dijkstra Visualizer</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Vis.js for graph -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/4.21.0/vis-network.min.css" rel="stylesheet"/>
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #232526, #414345);
+        color: #fff;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    h1 {
+        margin-top: 20px;
+        font-size: 40px;
+        font-weight: 600;
+        text-align: center;
+        animation: fadeInDown 1s ease;
+    }
+
+    @keyframes fadeInDown {
+        from { opacity: 0; transform: translateY(-30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+        background: rgba(255,255,255,0.1);
+        padding: 25px;
+        border-radius: 15px;
+        backdrop-filter: blur(10px);
+        width: 80%;
+        max-width: 800px;
+        margin: 20px 0;
+        animation: fadeUp 1s ease;
+    }
+
+    @keyframes fadeUp {
+        from { opacity:0; transform: translateY(40px); }
+        to { opacity:1; transform: translateY(0); }
+    }
+
+    form {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    input {
+        padding: 10px;
+        border-radius: 8px;
+        border: none;
+        outline: none;
+        width: 120px;
+        transition: 0.3s;
+    }
+    input:focus { transform: scale(1.1); }
+
+    button {
+        padding: 12px 20px;
+        border-radius: 8px;
+        background: #00ffd1;
+        color: #000;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+        transition: 0.4s ease;
+    }
+    button:hover {
+        background: #00c79a;
+        transform: scale(1.1);
+        box-shadow: 0 0 15px #00ffd1;
+    }
+
+    pre {
+        background: rgba(0,0,0,0.4);
+        padding: 10px;
+        border-radius: 10px;
+        white-space: pre-wrap;
+        font-size: 18px;
+        animation: fadeUp 1s ease;
+    }
+
+    #mynetwork {
+        height: 450px;
+        background: #111;
+        border-radius: 15px;
+        margin-top: 15px;
+        animation: fadeUp 1s ease;
+    }
+</style>
+</head>
+<body>
+
+<h1>Dijkstra Path Finder 🚀</h1>
+
+<div class="card">
+    <form method="POST" action="/run">
+        <input type="text" name="src" placeholder="Source (A)" required>
+        <input type="text" name="dest" placeholder="Destination (D)" required>
+        <button type="submit">Find Path</button>
+    </form>
+</div>
+
+{% if result %}
+<div class="card">
+    <h2>📌 Result</h2>
+    <pre>{{result}}</pre>
+</div>
+{% endif %}
+
+<div class="card">
+    <h2>📍 Graph Visualization</h2>
+    <div id="mynetwork"></div>
+</div>
+
+<script>
+    const nodes = new vis.DataSet([
+        { id: 'A', label: 'A', color: "#00ffd1" },
+        { id: 'B', label: 'B', color: "#00ffd1" },
+        { id: 'C', label: 'C', color: "#00ffd1" },
+        { id: 'D', label: 'D', color: "#00ffd1" }
+    ]);
+
+    const edges = new vis.DataSet([
+        { from: 'A', to: 'B', label: '4', font:{color:'white'}, color:"white" },
+        { from: 'A', to: 'C', label: '2', font:{color:'white'}, color:"white" },
+        { from: 'B', to: 'D', label: '5', font:{color:'white'}, color:"white" },
+        { from: 'C', to: 'D', label: '1', font:{color:'white'}, color:"white" },
+    ]);
+
+    const data = { nodes, edges };
+    const container = document.getElementById("mynetwork");
+    const options = {
+        edges:{ shadow:true, width:2, arrows:'to' },
+        physics:false,
+        interaction:{ hover:true },
+        layout:{ improvedLayout:true }
+    };
+    new vis.Network(container, data, options);
+</script>
+
+</body>
+</html>
+
